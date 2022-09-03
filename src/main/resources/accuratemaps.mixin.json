@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.lucaargolo.accuratemaps.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AbstractBlockStateMixin",
+    "FilledMapItemMixin",
+    "MapColorInvoker",
+    "MapColorInvoker$BrightnessInvoker"
+  ],
+  "client": [
+    "ClientPlayNetworkHandlerMixin",
+    "MapTextureMixin",
+    "MinecraftClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

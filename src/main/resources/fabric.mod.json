@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "accuratemaps",
+  "version": "${version}",
+  "name": "Accurate Maps",
+  "description": "A small quality of life mod that changes the vanilla map coloring to be more accurate to in-game colors.",
+  "authors": [
+    "D4rkness_King"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/accurate-maps",
+    "sources": "https://github.com/lucaargolo/accurate-maps",
+    "issues": "https://github.com/lucaargolo/accurate-maps/issues"
+  },
+  "license": "Mozilla Public License 2.0",
+  "icon": "assets/accuratemaps/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      {
+        "value": "io.github.lucaargolo.accuratemaps.client.AccurateMapsClient",
+        "adapter": "kotlin"
+      }
+    ],
+    "main": [
+      {
+        "value": "io.github.lucaargolo.accuratemaps.AccurateMaps",
+        "adapter": "kotlin"
+      }
+    ]
+  },
+  "mixins": [
+    "accuratemaps.mixin.json"
+  ],
+  "accessWidener": "accuratemaps.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.14.8",
+    "fabric": ">=0.58.0+1.18",
+    "fabric-language-kotlin": ">=1.8.0+kotlin.1.7.0",
+    "minecraft": "1.18.x"
+  }
+}

@@ -18,11 +18,11 @@ import net.minecraft.item.map.MapState
 import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.BiomeKeys
 import org.lwjgl.opengl.GL11
 import java.nio.ByteBuffer
-import java.util.*
 
 object AccurateMapsClient: ClientModInitializer {
 
@@ -45,7 +45,7 @@ object AccurateMapsClient: ClientModInitializer {
         Registry.BLOCK.forEach { block ->
             block.stateManager.states.forEach { state ->
                 val blockModel = client.bakedModelManager.blockModels.getModel(state)
-                val blockSprite = blockModel.getQuads(state, Direction.UP, Random()).firstOrNull()?.sprite ?: blockModel.particleSprite
+                val blockSprite = blockModel.getQuads(state, Direction.UP, Random.create()).firstOrNull()?.sprite ?: blockModel.particleSprite
                 var sumIndex = 0
                 var sumR = 0
                 var sumG = 0

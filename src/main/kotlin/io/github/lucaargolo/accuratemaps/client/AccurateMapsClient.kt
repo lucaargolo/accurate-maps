@@ -9,6 +9,7 @@ import io.github.lucaargolo.accuratemaps.utils.AccurateMapState
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -22,7 +23,9 @@ import net.minecraft.util.math.random.Random
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.BiomeKeys
 import org.lwjgl.opengl.GL11
+import java.lang.Float.min
 import java.nio.ByteBuffer
+import kotlin.math.roundToInt
 
 object AccurateMapsClient: ClientModInitializer {
 
@@ -106,11 +109,14 @@ object AccurateMapsClient: ClientModInitializer {
                 val blockPos = BlockPos.fromLong(accurateState.positions[index])
 
                 if(!blockState.isAir) {
-                    val tintColor = MinecraftClient.getInstance().blockColors.getColor(blockState, world, blockPos, 0)
+                    val tintColor =  ColorProviderRegistry.BLOCK.get(blockState.block)?.getColor(blockState, world, blockPos, 0) ?: 0xFFFFFF
                     val savedColor = blockColorMap.getOrDefault(blockState, 0)
-                    val multipliedColor = ((((tintColor shr 16 and 255) * (savedColor shr 16 and 255)) / 255) shl 16) + ((((tintColor shr 8 and 255) * (savedColor shr 8 and 255)) / 255) shl 8) + (((tintColor and 255) * (savedColor and 255)) / 255)
-                    val finalColor = if(tintColor != -1) multipliedColor else savedColor
-                    val accurateColor = AccurateMapColor(finalColor, blockBiome, blockState, blockPos)
+                    val lightFactor = 1.2f
+                    val red = min(255f, ((((tintColor shr 16 and 255) * (savedColor shr 16 and 255)) / 255f) * lightFactor)).roundToInt()
+                    val green = min(255f, ((((tintColor shr 8 and 255) * (savedColor shr 8 and 255)) / 255f) * lightFactor)).roundToInt()
+                    val blue = min(255f, ((((tintColor and 255) * (savedColor and 255)) / 255f) * lightFactor)).roundToInt()
+                    val multipliedColor = (red shl 16) + (green shl 8) + blue
+                    val accurateColor = AccurateMapColor(multipliedColor, blockBiome, blockState, blockPos)
                     texture.image?.setColor(x, y, accurateColor.getRenderColor(brightness))
                 }else{
                     texture.image?.setColor(x, y, originalColor.getRenderColor(brightness))

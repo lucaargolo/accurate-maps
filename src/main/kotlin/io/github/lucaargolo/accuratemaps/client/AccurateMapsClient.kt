@@ -20,7 +20,7 @@ import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registries
 import net.minecraft.world.biome.BiomeKeys
 import org.lwjgl.opengl.GL11
 import java.lang.Float.min
@@ -35,7 +35,8 @@ object AccurateMapsClient: ClientModInitializer {
     private val blockColorMap = linkedMapOf<BlockState, Int>()
 
     fun paintBlockColorMap(client: MinecraftClient) {
-        val atlas = client.bakedModelManager.blockModels.getModel(Blocks.STONE.defaultState).particleSprite.atlas
+        val atlasId = client.bakedModelManager.blockModels.getModel(Blocks.STONE.defaultState).particleSprite.atlasId
+        val atlas = client.getTextureManager().getTexture(atlasId)
         RenderSystem.bindTexture(atlas.glId)
         val width = intArrayOf(0)
         GL11.glGetTexLevelParameteriv(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH, width)
@@ -45,7 +46,7 @@ object AccurateMapsClient: ClientModInitializer {
         val buffer: ByteBuffer = ByteBuffer.allocateDirect(pixels.size)
         GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer)
         buffer.get(pixels)
-        Registry.BLOCK.forEach { block ->
+        Registries.BLOCK.forEach { block ->
             block.stateManager.states.forEach { state ->
                 val blockModel = client.bakedModelManager.blockModels.getModel(state)
                 val blockSprite = blockModel.getQuads(state, Direction.UP, Random.create()).firstOrNull()?.sprite ?: blockModel.particleSprite

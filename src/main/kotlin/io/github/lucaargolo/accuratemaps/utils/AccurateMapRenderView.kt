@@ -7,13 +7,13 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.fluid.FluidState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.RegistryKeys
 import net.minecraft.world.BlockRenderView
 import net.minecraft.world.World
 import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.chunk.ChunkProvider
 import net.minecraft.world.chunk.light.LightingProvider
-import net.minecraft.world.level.ColorResolver
+import net.minecraft.world.biome.ColorResolver
 
 class AccurateMapRenderView(private val accurateMapState: AccurateMapState, val world: World): BlockRenderView {
 
@@ -40,7 +40,7 @@ class AccurateMapRenderView(private val accurateMapState: AccurateMapState, val 
     override fun getColor(pos: BlockPos, colorResolver: ColorResolver): Int {
         return colorCache.getOrPut(pos) {
             val index = accurateMapState.positions.indexOf(pos.asLong())
-            val biome = world.registryManager.get(Registry.BIOME_KEY).get(if (index == -1) BiomeKeys.FOREST else accurateMapState.biomesPalette[accurateMapState.biomes[index]])
+            val biome = world.registryManager.get(RegistryKeys.BIOME).get(if (index == -1) BiomeKeys.FOREST else accurateMapState.biomesPalette[accurateMapState.biomes[index]])
             colorResolver.getColor(biome, pos.x + 0.5, pos.z + 0.5)
         }
     }

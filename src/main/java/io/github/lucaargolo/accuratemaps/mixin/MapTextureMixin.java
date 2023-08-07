@@ -2,6 +2,7 @@ package io.github.lucaargolo.accuratemaps.mixin;
 
 import io.github.lucaargolo.accuratemaps.client.AccurateMapsClient;
 import io.github.lucaargolo.accuratemaps.utils.AccurateMapState;
+import io.github.lucaargolo.accuratemaps.utils.AccurateMapState;
 import net.minecraft.client.render.MapRenderer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.item.map.MapState;

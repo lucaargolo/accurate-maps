@@ -9,8 +9,8 @@ import net.minecraft.block.MapColor
 import net.minecraft.nbt.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.RegistryKey
+import net.minecraft.registry.RegistryKeys
+import net.minecraft.registry.RegistryKey
 import net.minecraft.world.PersistentState
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.BiomeKeys
@@ -55,9 +55,9 @@ class AccurateMapState(startLists: Boolean = true): PersistentState() {
             }
         })
         nbt.put("statesPalette", NbtIntArray(
-            statesPalette.map { state ->
-                Block.getRawIdFromState(state)
-            }.toIntArray()
+                statesPalette.map { state ->
+                    Block.getRawIdFromState(state)
+                }.toIntArray()
         ))
         nbt.put("biomes", NbtIntArray(biomes))
         nbt.put("states", NbtIntArray(states))
@@ -67,7 +67,7 @@ class AccurateMapState(startLists: Boolean = true): PersistentState() {
 
     fun readClientNbt(nbt: NbtCompound) {
         (nbt.get("biomesPalette") as? NbtList)?.forEachIndexed { index, element ->
-            biomesPalette.add(index, RegistryKey.of(Registry.BIOME_KEY, Identifier(element.asString())))
+            biomesPalette.add(index, RegistryKey.of(RegistryKeys.BIOME, Identifier(element.asString())))
         }
         nbt.getIntArray("statesPalette").forEachIndexed { index, id ->
             statesPalette.add(index, Block.getStateFromRawId(id))
@@ -112,7 +112,7 @@ class AccurateMapState(startLists: Boolean = true): PersistentState() {
         fun createFromNbt(nbt: NbtCompound): AccurateMapState {
             return AccurateMapState(false).also {
                 (nbt.get("biomesPalette") as? NbtList)?.forEachIndexed { index, element ->
-                    it.biomesPalette.add(index, RegistryKey.of(Registry.BIOME_KEY, Identifier(element.asString())))
+                    it.biomesPalette.add(index, RegistryKey.of(RegistryKeys.BIOME, Identifier(element.asString())))
                 }
                 (nbt.get("statesPalette") as? NbtList)?.forEachIndexed { index, element ->
                     it.statesPalette.add(index, BlockState.CODEC.decode(NbtOps.INSTANCE, element).getOrThrow(true) {}.first)

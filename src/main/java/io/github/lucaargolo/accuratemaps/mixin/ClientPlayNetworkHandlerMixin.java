@@ -1,6 +1,7 @@
 package io.github.lucaargolo.accuratemaps.mixin;
 
 import io.github.lucaargolo.accuratemaps.client.AccurateMapsClient;
+import io.github.lucaargolo.accuratemaps.client.AccurateMapsClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;

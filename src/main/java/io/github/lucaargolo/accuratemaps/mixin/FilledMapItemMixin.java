@@ -2,6 +2,7 @@ package io.github.lucaargolo.accuratemaps.mixin;
 
 import com.google.common.collect.Multiset;
 import io.github.lucaargolo.accuratemaps.utils.AccurateMapState;
+import io.github.lucaargolo.accuratemaps.utils.AccurateMapState;
 import net.minecraft.block.MapColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
@@ -11,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,8 +34,8 @@ public abstract class FilledMapItemMixin {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/item/map/MapState;putColor(IIB)Z"), method = "updateColors", locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void updateAccurateMapState(World world, Entity entity, MapState state, CallbackInfo ci, int i, int j, int k, int l, int m, int n, MapState.PlayerUpdateTracker playerUpdateTracker, boolean bl, int o, double d, int p, int q, int r, boolean bl2, int s, int t, Multiset<MapColor> multiset, WorldChunk worldChunk, ChunkPos chunkPos, int u, int v, int w, double e, MapColor mapColor, MapColor.Brightness brightness) {
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/item/map/MapState;putColor(IIB)Z"), method = "updateColors", locals = LocalCapture.CAPTURE_FAILHARD)
+    public void updateAccurateMapState(World world, Entity entity, MapState state, CallbackInfo ci, int i, int j, int k, int l, int m, int n, MapState.PlayerUpdateTracker playerUpdateTracker, BlockPos.Mutable pos1, BlockPos.Mutable pos2, boolean bl, int o, double d, int p, int r, boolean bl2, int s, int t, Multiset<MapColor> multiset, WorldChunk worldChunk, int u, double e, MapColor mapColor, MapColor.Brightness brightness) {
         currentState.setBlock(o, p, mapColor);
     }
 

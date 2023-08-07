@@ -7,17 +7,20 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.fluid.FluidState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.RegistryKeys
 import net.minecraft.world.BlockRenderView
 import net.minecraft.world.World
 import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.chunk.ChunkProvider
 import net.minecraft.world.chunk.light.LightingProvider
-import net.minecraft.world.level.ColorResolver
+import net.minecraft.world.biome.ColorResolver
+import net.minecraft.world.chunk.light.ChunkSkyLight
+import net.minecraft.world.chunk.light.LightSourceView
+import java.util.function.BiConsumer
 
-class AccurateMapRenderView(private val accurateMapState: AccurateMapState, val world: World): BlockRenderView {
+class AccurateMapRenderView(private val accurateMapState: AccurateMapState, val world: World): BlockRenderView, LightSourceView {
 
-    private val lightningProvider = LightingProvider(AccurateMapRenderViewChunkProvider(), true, true)
+    private val lightingProvider = LightingProvider(AccurateMapRenderViewChunkProvider(), true, true)
     private val colorCache = mutableMapOf<BlockPos, Int>()
 
     override fun getHeight() = world.height
@@ -33,20 +36,28 @@ class AccurateMapRenderView(private val accurateMapState: AccurateMapState, val 
 
     override fun getFluidState(pos: BlockPos): FluidState = getBlockState(pos).fluidState
 
+    override fun forEachLightSource(callback: BiConsumer<BlockPos, BlockState>?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getChunkSkyLight(): ChunkSkyLight {
+        TODO("Not yet implemented")
+    }
+
     override fun getBrightness(direction: Direction?, shaded: Boolean) = 1f
 
-    override fun getLightingProvider() = lightningProvider
+    override fun getLightingProvider() = lightingProvider
 
     override fun getColor(pos: BlockPos, colorResolver: ColorResolver): Int {
         return colorCache.getOrPut(pos) {
             val index = accurateMapState.positions.indexOf(pos.asLong())
-            val biome = world.registryManager.get(Registry.BIOME_KEY).get(if (index == -1) BiomeKeys.FOREST else accurateMapState.biomesPalette[accurateMapState.biomes[index]])
+            val biome = world.registryManager.get(RegistryKeys.BIOME).get(if (index == -1) BiomeKeys.FOREST else accurateMapState.biomesPalette[accurateMapState.biomes[index]])
             colorResolver.getColor(biome, pos.x + 0.5, pos.z + 0.5)
         }
     }
 
     private inner class AccurateMapRenderViewChunkProvider: ChunkProvider {
-        override fun getChunk(chunkX: Int, chunkZ: Int) = this@AccurateMapRenderView
+        override fun getChunk(chunkX: Int, chunkZ: Int): LightSourceView = this@AccurateMapRenderView
         override fun getWorld() = this@AccurateMapRenderView
     }
 
